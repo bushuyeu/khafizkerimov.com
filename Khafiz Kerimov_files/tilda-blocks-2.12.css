@@ -1,6 +1,8 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700&subset=latin,cyrillic);
 
+/* found in html */
 .t-body{margin:0}
+
 
 #allrecords{-webkit-font-smoothing:antialiased;background-color:none}
 #allrecords a{color:#ff8562;text-decoration:none}
@@ -10,6 +12,7 @@
 #allrecords b,
 #allrecords strong{font-weight:700}
 
+/* found in html end */
 @media print{
   body,html{
     min-width:1200px;
@@ -386,6 +389,7 @@
       .t-title_xxl{font-size:30px}
       }
 
+/* found in html  */
     .t-records{
       -webkit-font_smoothing:antialiased;
       background-color:none}
@@ -408,6 +412,7 @@
       margin-top:0;
       margin-bottom:10px
       }
+/* /found in html  */
 
     .t-cover{
       height:700px;
@@ -1361,12 +1366,12 @@
   margin-right:auto;
   margin-left:auto}
 
-@media screen and (max-width:960px){
+/* @media screen and (max-width:960px){
   .carousel-control .carousel-control-left{left:10%}
   .carousel-control .carousel-control-left-white{left:10%}
   .carousel-control .carousel-control-right{right:10%}
   .carousel-control .carousel-control-right-white{right:10%}
-}
+} */
 
 .t-tildalabel{
   background-color:#000;
@@ -1673,15 +1678,16 @@
         -webkit-transform:translateX(3000px);
         -ms-transform:translateX(3000px);
         transform:translateX(3000px)}
-
+/* found in html */
       .r_anim{
         -webkit-transition:opacity 0.5s;
         transition:opacity 0.5s}
+/* /found in html */
 
       .r_hidden{opacity:0}
-
+/* found in html */
       .r_showed{opacity:1}img:not([src]){visibility:hidden}
-
+/* /found in html */
       .t-rec_pt_0{padding-top:0}
 
       .t-rec_pt_15{padding-top:15px}
@@ -1718,7 +1724,11 @@
 
       .t-rec_pb_30{padding-bottom:30px}
 
+      /* found in html */
+
       .t-rec_pb_45{padding-bottom:45px}
+
+      /* /found in html */
 
       .t-rec_pb_60{padding-bottom:60px}
 
@@ -1779,7 +1789,11 @@
 
       .t-rec_pb_30{padding-bottom:30px}
 
+      /* found in html */
+
       .t-rec_pb_45{padding-bottom:45px}
+
+      /* /found in html */
 
       .t-rec_pb_60{padding-bottom:60px}
 
