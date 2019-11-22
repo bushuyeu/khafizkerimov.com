@@ -1,6 +1,6 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700&subset=latin,cyrillic);
 
-/* found in html */
+/* found in html, publications */
 .t-body{margin:0}
 
 
@@ -11,7 +11,7 @@
 #allrecords ul{padding-left:20px}
 #allrecords b,
 #allrecords strong{font-weight:700}
-
+/* /found in html, publications */
 /* found in html end */
 @media print{
   body,html{
@@ -22,13 +22,13 @@
     border:none
     }
   }
-
+/* found in  publications */
 .t-text{
   font-family:'Roboto',Arial,sans-serif;
   font-weight:300;
   color:#000
   }
-
+/* /found in  publications */
 .t-text_xs{
   font-size:15px;
   line-height:1.55
@@ -38,12 +38,12 @@
   font-size:18px;
   line-height:1.55
 }
-
+/* found in  publications */
 .t-text_md{
   font-size:20px;
   line-height:1.55
   }
-
+/* /found in  publications */
 .t-text_lg{
   font-size:22px;
   line-height:1.55
@@ -52,13 +52,14 @@
 .t-text_weight_plus{
   font-weight:400
   }
-
+/* found in Publications */
 .t-text-impact{
   font-family:'Roboto',Arial,sans-serif;
   font-weight:300;color:#000
   }
+/* /found in publications */
 
-  .t-text-impact_xs{
+  .{t-text}-impact_xs{
     font-size:26px;
     line-height:1.5
     }
@@ -67,10 +68,14 @@
     font-size:32px;
     line-height:1.35}
 
+    /* found in publications */
+
   .t-text-impact_md{
     font-size:38px;
     line-height:1.35
     }
+    /* /found in publications */
+
 
   .t-text-impact_lg{
     font-size:42px;
@@ -263,7 +268,9 @@
 
   .t-text_xs{font-size:14px}
   .t-text_sm{font-size:16px}
+  /* found in  publications */
   .t-text_md{font-size:18px}
+  /* /found in  publications */
   .t-text_lg{font-size:20px}
   .t-text-impact_md{font-size:30px}
   .t-descr_xxs{font-size:12px}
@@ -306,12 +313,12 @@
       font-size:14px;
       line-height:1.45
       }
-
+/* found in  publications */
     .t-text_md{
       font-size:16px;
       line-height:1.45
       }
-
+/* /found in  publications */
     .t-text_lg{
       font-size:18px;
       line-height:1.45
@@ -389,7 +396,7 @@
       .t-title_xxl{font-size:30px}
       }
 
-/* found in html  */
+/* found in html publications  */
     .t-records{
       -webkit-font_smoothing:antialiased;
       background-color:none}
@@ -474,7 +481,7 @@
           position:absolute;
           top:0;
           left:0}
-
+/* found in publications t-container*/
         .t-cover .t-container,.t-cover .t-container_100,.t-cover .t-container_10,.t-cover .t-container_8{
           position:absolute;
           top:0;
@@ -482,7 +489,7 @@
           bottom:0;
           right:0
           }
-
+/* /found in publications */
         .t-cover__wrapper{
           height:700px;
           display:table-cell;
@@ -1678,23 +1685,29 @@
         -webkit-transform:translateX(3000px);
         -ms-transform:translateX(3000px);
         transform:translateX(3000px)}
-/* found in html */
+/* found in html, publications */
       .r_anim{
         -webkit-transition:opacity 0.5s;
         transition:opacity 0.5s}
-/* /found in html */
+/* /found in html, publications */
 
       .r_hidden{opacity:0}
-/* found in html */
+/* found in html, publications */
       .r_showed{opacity:1}img:not([src]){visibility:hidden}
-/* /found in html */
+
       .t-rec_pt_0{padding-top:0}
+
+/* /found in html publications*/
 
       .t-rec_pt_15{padding-top:15px}
 
       .t-rec_pt_30{padding-top:30px}
 
+/* found in publications */
+
       .t-rec_pt_45{padding-top:45px}
+
+/* /found in publications */
 
       .t-rec_pt_60{padding-top:60px}
 
@@ -1724,13 +1737,15 @@
 
       .t-rec_pb_30{padding-bottom:30px}
 
-      /* found in html */
+      /* found in html, publications */
 
       .t-rec_pb_45{padding-bottom:45px}
 
-      /* /found in html */
+
 
       .t-rec_pb_60{padding-bottom:60px}
+
+        /* /found in html , publ*/
 
       .t-rec_pb_75{padding-bottom:75px}
 
@@ -1752,8 +1767,12 @@
 
       .t-rec_pb_210{padding-bottom:210px}
 
+/* found in publications */
     @media screen and (max-width:480px){
       .t-rec_pt_0{padding-top:0}
+
+/* /found in publications */
+
 
       .t-rec_pt_15{padding-top:15px}
 
@@ -1783,8 +1802,9 @@
 
       .t-rec_pt_210{padding-top:120px!important}
 
+/* found in publications */
       .t-rec_pb_0{padding-bottom:0}
-
+/* /found in publications */
       .t-rec_pb_15{padding-bottom:15px}
 
       .t-rec_pb_30{padding-bottom:30px}
@@ -1887,7 +1907,7 @@
         height:100%;
         overflow:hidden}
 
-      .t107{text-align:center}
+  
 
       .t107__width{vertical-align:middle}
 
@@ -1912,7 +1932,7 @@
         padding-bottom:0}
 
       .t017__descr{padding-top:21px}
-
+/* found in permissions */
       .t021__line{
         width:100%;
         max-width:140px;
@@ -1925,6 +1945,8 @@
         text-align:center;
         margin-top:44px;
         margin-bottom:54px}
+
+/* /found in permissions */
 
       .t046__text{
         text-align:center;
