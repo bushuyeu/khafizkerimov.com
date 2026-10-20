@@ -190,7 +190,6 @@
           document.body.classList.add('has-panel');
           panel.inert = false;
           panel.setAttribute('aria-hidden', 'false');
-          spinPortrait();
         }, reducedMotion.matches ? 0 : 3000);
       }
 
@@ -219,8 +218,8 @@
         if (!link || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
         event.preventDefault();
         selectView(link.dataset.view);
+        spinPortrait();
         if (phase === 'ready') {
-          spinPortrait();
           if (window.matchMedia('(max-width: 1100px), (max-height: 590px)').matches) {
             panel.scrollIntoView({ behavior: reducedMotion.matches ? 'instant' : 'smooth', block: 'start' });
           }
@@ -230,7 +229,7 @@
       });
 
       window.addEventListener('load', () => {
-        if (phase === 'waiting') pauseTimer = window.setTimeout(dockProfile, 3000);
+        if (phase === 'waiting') pauseTimer = window.setTimeout(dockProfile, 2000);
       }, { once: true });
     })();
   </script>
