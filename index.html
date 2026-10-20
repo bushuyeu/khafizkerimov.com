@@ -11,6 +11,26 @@
   <meta name="robots" content="index, follow">
   <link rel="stylesheet" href="./Khafiz Kerimov_files/tilda-grid-3.0.min.css" type="text/css" media="all">
   <link rel="stylesheet" href="./Khafiz Kerimov_files/tilda-blocks-2.12.css" type="text/css" media="all">
+  <style>
+    .home-profile {
+      transform: translateX(0);
+      transition: transform 3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .home-profile.is-docked {
+      transform: translateX(var(--profile-offset, 0px));
+    }
+
+    .home-profile.is-resizing {
+      transition: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .home-profile {
+        transition: none;
+      }
+    }
+  </style>
   <script type="text/javascript">window.dataLayer = window.dataLayer || [];</script>
 
 <!-- HTML Meta Tags -->
@@ -36,7 +56,7 @@
 
 </head>
 <body class="t-body" style="margin: 0px;" data-gr-c-s-loaded="true">
-  <div id="allrecords" class="t-records">
+  <div id="allrecords" class="t-records home-profile">
     <div class="t-rec_pt_60 t-rec_pb_30 r_showed r_anim" style="padding-top:60px;padding-bottom:30px; ">
       <div class="t107">
         <div class="t-align_center">
@@ -110,6 +130,39 @@
   </div>
 </div>
 
+<script>
+  (() => {
+    const profile = document.querySelector('.home-profile');
+    const parts = profile.querySelectorAll(
+      '.t107__widthauto, .t017__title, .t017__descr, .t142A__wraptwo, .t046__text'
+    );
 
+    function measureOffset() {
+      // Remove the current translation from measurements, including during a resize.
+      const transform = getComputedStyle(profile).transform;
+      const currentX = transform === 'none' ? 0 : new DOMMatrixReadOnly(transform).m41;
+      const leftmost = Math.min(...Array.from(parts, part =>
+        part.getBoundingClientRect().left - currentX
+      ));
+      const gutter = Math.min(24, Math.max(12, window.innerWidth * 0.02));
+      profile.style.setProperty('--profile-offset', `${Math.min(0, gutter - leftmost)}px`);
+    }
 
+    window.addEventListener('load', () => {
+      measureOffset();
+      window.setTimeout(() => profile.classList.add('is-docked'), 3000);
+      document.fonts.ready.then(measureOffset);
+    }, { once: true });
+
+    window.addEventListener('resize', () => {
+      profile.classList.add('is-resizing');
+      measureOffset();
+      // Apply the new position immediately so a narrower screen cannot clip the profile.
+      profile.getBoundingClientRect();
+      profile.classList.remove('is-resizing');
+    }, { passive: true });
+  })();
+</script>
+
+</body>
 </html>
