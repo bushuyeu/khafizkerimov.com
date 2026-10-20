@@ -36,7 +36,11 @@
 
 
   <style>
-    :root { --gutter: 28px; --sidebar: clamp(300px, 30vw, 400px); --gap: 32px; }
+    :root {
+      --gutter: clamp(16px, 3dvh, 28px);
+      --sidebar: 560px;
+      --gap: 20px;
+    }
     *, *::before, *::after { box-sizing: border-box; }
     html, body { margin: 0; min-height: 100%; background: #fff; color: #111; }
     body { font-family: 'Roboto', Arial, sans-serif; overflow-x: hidden; }
@@ -44,35 +48,28 @@
     a { color: inherit; text-underline-offset: 3px; }
     a:focus-visible { outline: 2px solid #555; outline-offset: 5px; }
     .profile {
-      position: fixed; top: 32px; left: 50%; transform: translateX(-50%);
-      width: min(560px, calc(100% - 48px)); max-height: calc(100dvh - 64px);
+      position: fixed; top: var(--gutter); left: 50%; transform: translateX(-50%);
+      width: var(--sidebar);
       display: flex; flex-direction: column; text-align: center;
-      transition: left 3s cubic-bezier(.4,0,.2,1), transform 3s cubic-bezier(.4,0,.2,1),
-                  width 3s cubic-bezier(.4,0,.2,1), top 3s cubic-bezier(.4,0,.2,1);
+      transition: left 3s cubic-bezier(.4,0,.2,1), transform 3s cubic-bezier(.4,0,.2,1);
     }
-    .profile-main { min-height: 0; overflow-y: auto; scrollbar-width: thin; padding: 0 6px; }
+    .profile-main { padding: 0 6px; }
     .profile-photo {
-      display: block; width: 300px; max-width: 100%; height: auto; aspect-ratio: 1;
+      display: block; width: clamp(180px, calc(100dvh - 470px), 300px); max-width: 100%; height: auto; aspect-ratio: 1;
       margin: 0 auto; border-radius: 50%; object-fit: cover;
-      transition: width 3s cubic-bezier(.4,0,.2,1);
     }
     .profile-name {
-      margin: 28px 0 24px; font-size: clamp(42px, 4.9vw, 62px); font-weight: 400; line-height: 1.15;
-      transition: font-size 3s cubic-bezier(.4,0,.2,1), margin 3s cubic-bezier(.4,0,.2,1);
+      margin: 20px 0 18px; font-size: clamp(42px, 7.5dvh, 62px); font-weight: 400; line-height: 1.15;
     }
-    .profile-bio { font-size: 16px; font-weight: 300; line-height: 1.6; }
-    .profile-bio p { margin: 0 0 20px; }
-    .profile-nav { flex: 0 0 auto; display: flex; justify-content: space-between; gap: 8px; padding: 18px 0 14px; }
+    .profile-bio { font-size: 16px; font-weight: 300; line-height: 1.5; }
+    .profile-bio p { margin: 0 0 14px; }
+    .profile-nav { flex: 0 0 auto; display: flex; justify-content: space-between; gap: 8px; padding: 10px 0 8px; }
     .profile-nav a { padding: 8px; font-size: 16px; font-weight: 700; }
     .profile-nav a[aria-current='page'] { text-decoration-thickness: 2px; }
-    .profile-contact { flex: 0 0 auto; font-size: 13px; line-height: 1.9; overflow-wrap: anywhere; padding-bottom: 4px; }
+    .profile-contact { flex: 0 0 auto; font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; padding-bottom: 4px; }
     .workspace.is-docking .profile {
-      top: var(--gutter); left: var(--gutter); width: var(--sidebar);
-      max-height: calc(100dvh - 2 * var(--gutter)); transform: translateX(0);
+      left: var(--gutter); transform: translateX(0);
     }
-    .workspace.is-docking .profile-photo { width: 160px; }
-    .workspace.is-docking .profile-name { margin: 20px 0; font-size: 34px; }
-    .workspace.is-docking .profile-bio { font-size: 15px; line-height: 1.55; }
     .content-panel {
       position: fixed; top: var(--gutter); right: var(--gutter); bottom: var(--gutter);
       left: calc(var(--gutter) + var(--sidebar) + var(--gap));
@@ -81,23 +78,29 @@
       transition: opacity .45s ease, transform .45s ease, visibility .45s;
     }
     .workspace.is-ready .content-panel { opacity: 1; visibility: visible; pointer-events: auto; transform: none; }
-    .content-heading { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 4px 28px 18px; border-bottom: 1px solid #eee; }
-    .content-heading h2 { margin: 0; font-size: 20px; font-weight: 400; }
+    .content-heading { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 18px 14px; border-bottom: 1px solid #eee; }
+    .content-heading h2 { margin: 0; font-size: 18px; font-weight: 400; }
     .content-heading a { flex: 0 0 auto; font-size: 12px; color: #555; }
     .content-views { flex: 1 1 auto; min-height: 0; }
     .content-frame { width: 100%; height: 100%; display: block; border: 0; background: white; }
     .content-frame[hidden] { display: none; }
     .profile-photo.is-spinning { animation: portrait-turn 3s ease-in-out; }
     @keyframes portrait-turn { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    @media (max-width: 900px) {
+    @media (max-height: 700px) and (min-width: 1101px) {
+      .profile-photo { width: clamp(140px, calc(100dvh - 460px), 240px); }
+      .profile-name { margin: 16px 0 14px; font-size: 42px; }
+      .profile-bio { font-size: 15px; }
+      .profile-bio p { margin-bottom: 12px; }
+      .profile-nav { padding: 6px 0; }
+    }
+    @media (max-width: 1100px), (max-height: 590px) {
       body.has-panel { overflow: auto; }
       .profile, .workspace.is-docking .profile {
         position: relative; top: auto; left: auto; transform: none;
-        width: min(560px, calc(100% - 32px)); max-height: none; margin: 24px auto;
+        width: min(560px, calc(100% - 32px)); margin: 24px auto;
       }
-      .profile-main { overflow: visible; }
-      .workspace.is-docking .profile-photo { width: 140px; }
-      .workspace.is-docking .profile-name { font-size: 34px; }
+      .profile-photo { width: min(260px, 60vw); }
+      .profile-name { font-size: clamp(34px, 6vw, 54px); }
       .content-panel { display: none; }
       .workspace.is-ready .content-panel {
         position: relative; inset: auto; display: flex; width: calc(100% - 32px);
@@ -220,7 +223,7 @@
         selectView(link.dataset.view);
         if (phase === 'ready') {
           spinPortrait();
-          if (window.matchMedia('(max-width: 900px)').matches) {
+          if (window.matchMedia('(max-width: 1100px), (max-height: 590px)').matches) {
             panel.scrollIntoView({ behavior: reducedMotion.matches ? 'instant' : 'smooth', block: 'start' });
           }
         } else if (phase === 'waiting') {
