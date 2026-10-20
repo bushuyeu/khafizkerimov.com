@@ -57,11 +57,7 @@
     .profile-photo {
       display: block; width: clamp(180px, calc(100dvh - 470px), 300px); max-width: 100%; height: auto; aspect-ratio: 1;
       margin: 0 auto; border-radius: 50%; object-fit: cover;
-      transform: rotate(0deg);
-      transition: transform 3s cubic-bezier(.4,0,.2,1);
     }
-    .workspace.is-docking .profile-photo { transform: rotate(-360deg); }
-    .workspace.is-ready .profile-photo { transition: none; }
     .profile-name {
       margin: 20px 0 18px; font-size: clamp(42px, 7.5dvh, 62px); font-weight: 400; line-height: 1.15;
     }
@@ -90,6 +86,9 @@
     .content-views { flex: 1 1 auto; min-height: 0; }
     .content-frame { width: 100%; height: 100%; display: block; border: 0; background: white; }
     .content-frame[hidden] { display: none; }
+    .video-view { padding: 22px 18px; overflow: auto; }
+    .video-player { display: block; width: 100%; min-height: 200px; aspect-ratio: 16 / 9; border: 0; }
+    .video-description { margin: 18px 0 0; font-size: 16px; font-weight: 300; line-height: 1.55; }
     @media (max-height: 700px) and (min-width: 1101px) {
       .profile-photo { width: clamp(140px, calc(100dvh - 460px), 240px); }
       .profile-name { margin: 16px 0 14px; font-size: 42px; }
@@ -104,7 +103,6 @@
         width: min(560px, calc(100% - 32px)); margin: 24px auto;
       }
       .profile-photo { width: min(260px, 60vw); }
-      .profile-photo, .workspace.is-docking .profile-photo { transform: none; transition: none; }
       .profile-name { font-size: clamp(34px, 6vw, 54px); }
       .content-panel { display: none; }
       .workspace.is-ready .content-panel {
@@ -114,8 +112,7 @@
       .content-heading { padding: 20px 8px 16px; }
     }
     @media (prefers-reduced-motion: reduce) {
-      .profile, .profile-photo, .profile-name, .content-panel { transition: none; }
-      .workspace.is-docking .profile-photo { transform: none; }
+      .profile, .content-panel { transition: none; }
     }
   </style>
 
@@ -146,6 +143,7 @@
     <section id="content-panel" class="content-panel" aria-labelledby="content-title" aria-hidden="true" inert>
       <header class="content-heading">
         <button id="back-to-publications" class="content-back" type="button" hidden>← Publications</button>
+        <button id="back-to-watch" class="content-back" type="button" hidden>← Watch</button>
         <h2 id="content-title" class="cv-heading" aria-live="polite">Curriculum vitae</h2>
       </header>
       <div class="content-views">
@@ -154,6 +152,10 @@
         <iframe id="view-listen" class="content-frame" title="Podcast episodes" data-src="./listen.html" hidden></iframe>
         <iframe id="view-watch" class="content-frame" title="Videos" data-src="./watch.html" hidden></iframe>
         <iframe id="view-pdf" class="content-frame" title="Article PDF reader" hidden></iframe>
+        <div id="view-video" class="content-frame video-view" hidden>
+          <iframe id="video-player" class="video-player" title="YouTube video player" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          <p id="video-description" class="video-description"></p>
+        </div>
       </div>
     </section>
   </div>
@@ -165,6 +167,11 @@
       const backToPublications = document.getElementById('back-to-publications');
       const publicationsFrame = document.getElementById('view-read');
       const pdfFrame = document.getElementById('view-pdf');
+      const backToWatch = document.getElementById('back-to-watch');
+      const watchFrame = document.getElementById('view-watch');
+      const videoView = document.getElementById('view-video');
+      const videoPlayer = document.getElementById('video-player');
+      const videoDescription = document.getElementById('video-description');
       const navigation = document.querySelector('.profile-nav');
       const links = Array.from(navigation.querySelectorAll('[data-view]'));
       const frames = Array.from(document.querySelectorAll('.content-frame'));
@@ -175,6 +182,8 @@
       let activePdfUrl = '';
       let lastPdfLink;
       let publicationsScrollTop = 0;
+      let watchScrollTop = 0;
+      let lastVideoLink;
 
       function dockProfile() {
         if (phase !== 'waiting') return;
@@ -192,7 +201,10 @@
 
       function selectView(view) {
         const wasReadingPdf = !pdfFrame.hidden;
+        const wasWatchingVideo = !videoView.hidden;
+        if (wasWatchingVideo) videoPlayer.removeAttribute('src');
         backToPublications.hidden = true;
+        backToWatch.hidden = true;
         title.classList.toggle('cv-heading', view === 'cv');
         for (const frame of frames) {
           const selected = frame.id === `view-${view}`;
@@ -212,6 +224,7 @@
         title.textContent = names[view];
         title.removeAttribute('title');
         if (view === 'read' && wasReadingPdf) publicationsFrame.contentWindow.scrollTo(0, publicationsScrollTop);
+        if (view === 'watch' && wasWatchingVideo) watchFrame.contentWindow.scrollTo(0, watchScrollTop);
       }
 
       function openPdf(url, link) {
@@ -230,6 +243,7 @@
         title.textContent = label;
         title.title = label;
         backToPublications.hidden = false;
+        backToWatch.hidden = true;
         backToPublications.focus({ preventScroll: true });
       }
 
@@ -251,6 +265,54 @@
         if (lastPdfLink && lastPdfLink.isConnected) lastPdfLink.focus({ preventScroll: true });
       });
 
+      function youtubeVideoId(url) {
+        const host = url.hostname.toLowerCase().replace(/^www\./, '');
+        let id;
+        if (host === 'youtu.be') id = url.pathname.split('/')[1];
+        else if (host === 'youtube.com' || host === 'm.youtube.com') {
+          if (url.pathname === '/watch') id = url.searchParams.get('v');
+          else if (/^\/(embed|shorts)\//.test(url.pathname)) id = url.pathname.split('/')[2];
+        }
+        return /^[A-Za-z0-9_-]{11}$/.test(id || '') ? id : null;
+      }
+
+      function openVideo(id, link) {
+        lastVideoLink = link;
+        watchScrollTop = watchFrame.contentWindow.scrollY;
+        for (const frame of frames) frame.hidden = frame !== videoView;
+        const label = link.textContent.trim() || 'Video';
+        const embedUrl = new URL('https://www.youtube.com/embed/' + id);
+        embedUrl.searchParams.set('playsinline', '1');
+        embedUrl.searchParams.set('rel', '0');
+        videoPlayer.title = label;
+        videoPlayer.src = embedUrl.href;
+        videoDescription.textContent = link.closest('li')?.textContent.trim() || label;
+        title.classList.remove('cv-heading');
+        title.textContent = label;
+        title.title = label;
+        backToPublications.hidden = true;
+        backToWatch.hidden = false;
+        backToWatch.focus({ preventScroll: true });
+      }
+
+      watchFrame.addEventListener('load', () => {
+        const watchDocument = watchFrame.contentDocument;
+        if (!watchDocument) return;
+        watchDocument.addEventListener('click', event => {
+          const link = event.target.closest('a[href]');
+          if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+          const id = youtubeVideoId(new URL(link.href));
+          if (!id) return;
+          event.preventDefault();
+          openVideo(id, link);
+        });
+      });
+
+      backToWatch.addEventListener('click', () => {
+        selectView('watch');
+        if (lastVideoLink && lastVideoLink.isConnected) lastVideoLink.focus({ preventScroll: true });
+      });
+
       navigation.addEventListener('click', event => {
         const link = event.target.closest('[data-view]');
         if (!link || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -264,7 +326,7 @@
       });
 
       window.addEventListener('load', () => {
-        if (phase === 'waiting') pauseTimer = window.setTimeout(dockProfile, 2000);
+        if (phase === 'waiting') pauseTimer = window.setTimeout(dockProfile, 1000);
       }, { once: true });
     })();
   </script>
