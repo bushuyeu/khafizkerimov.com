@@ -80,7 +80,7 @@
     .workspace.is-ready .content-panel { opacity: 1; visibility: visible; pointer-events: auto; transform: none; }
     .content-heading { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 18px 14px; border-bottom: 1px solid #eee; }
     .content-heading h2 { margin: 0; font-size: 18px; font-weight: 400; }
-    .content-heading a { flex: 0 0 auto; font-size: 12px; color: #555; }
+    .content-heading h2.cv-heading { font-family: 'Times New Roman', Times, serif; font-size: 14pt; font-weight: 400; line-height: 1.2; }
     .content-views { flex: 1 1 auto; min-height: 0; }
     .content-frame { width: 100%; height: 100%; display: block; border: 0; background: white; }
     .content-frame[hidden] { display: none; }
@@ -140,8 +140,7 @@
 
     <section id="content-panel" class="content-panel" aria-labelledby="content-title" aria-hidden="true" inert>
       <header class="content-heading">
-        <h2 id="content-title" aria-live="polite">Curriculum vitae</h2>
-        <a id="full-page-link" href="./cv.html" target="_blank" rel="noopener">Open full page ↗</a>
+        <h2 id="content-title" class="cv-heading" aria-live="polite">Curriculum vitae</h2>
       </header>
       <div class="content-views">
         <iframe id="view-cv" class="content-frame" title="Curriculum vitae" src="./cv.html"></iframe>
@@ -156,7 +155,6 @@
       const workspace = document.getElementById('workspace');
       const panel = document.getElementById('content-panel');
       const title = document.getElementById('content-title');
-      const fullPage = document.getElementById('full-page-link');
       const portrait = document.getElementById('portrait');
       const navigation = document.querySelector('.profile-nav');
       const links = Array.from(navigation.querySelectorAll('[data-view]'));
@@ -197,6 +195,7 @@
       }
 
       function selectView(view) {
+        title.classList.toggle('cv-heading', view === 'cv');
         for (const frame of frames) {
           const selected = frame.id === `view-${view}`;
           if (selected && frame.dataset.src) {
@@ -208,7 +207,6 @@
         for (const link of links) {
           if (link.dataset.view === view) {
             link.setAttribute('aria-current', 'page');
-            fullPage.href = link.href;
           } else {
             link.removeAttribute('aria-current');
           }
