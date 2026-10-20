@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PDF reader</title>
+  <link rel="stylesheet" href="./pdfjs/pdf_viewer.css">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body { display: flex; flex-direction: column; color: #222; background: #eee; font: 13px Arial, sans-serif; }
+    .reader-toolbar { flex: 0 0 auto; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 8px 10px; border-bottom: 1px solid #ddd; background: white; }
+    .reader-group { display: flex; align-items: center; gap: 5px; }
+    button, input, a { font: inherit; color: inherit; }
+    button { min-height: 28px; padding: 3px 7px; border: 1px solid #ccc; border-radius: 3px; background: white; cursor: pointer; }
+    button:disabled { opacity: .4; cursor: default; }
+    button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid #555; outline-offset: 2px; }
+    #page-number { width: 44px; padding: 4px; border: 1px solid #ccc; border-radius: 3px; text-align: center; }
+    #zoom-level { min-width: 34px; text-align: center; }
+    #download-pdf { margin-left: auto; text-underline-offset: 3px; }
+    #reader-status { margin: 0; padding: 12px; background: white; }
+    #reader-status[hidden] { display: none; }
+    #pdf-pages { position: relative; flex: 1 1 auto; min-height: 0; overflow: auto; padding: 12px; }
+    .pdf-page { position: relative; box-sizing: content-box; margin: 0 auto 16px; background: white; border: 1px solid #ddd; box-shadow: 0 1px 4px #0001; }
+    .pdf-page canvas { display: block; }
+    .pdf-page .textLayer { z-index: 1; }
+    @media (max-width: 430px) { .reader-toolbar { gap: 6px; } #download-pdf { margin-left: 0; } }
+  </style>
+</head>
+<body>
+  <nav class="reader-toolbar" aria-label="PDF controls">
+    <div class="reader-group">
+      <button id="previous-page" type="button" aria-label="Previous page" disabled>←</button>
+      <input id="page-number" type="number" min="1" value="1" aria-label="Page number" disabled>
+      <span id="page-count">/ —</span>
+      <button id="next-page" type="button" aria-label="Next page" disabled>→</button>
+    </div>
+    <div class="reader-group">
+      <button id="zoom-out" type="button" aria-label="Zoom out" disabled>−</button>
+      <output id="zoom-level" aria-live="polite">—</output>
+      <button id="zoom-in" type="button" aria-label="Zoom in" disabled>+</button>
+      <button id="fit-width" type="button" disabled>Fit width</button>
+    </div>
+    <a id="download-pdf" download hidden>Download PDF</a>
+  </nav>
+  <p id="reader-status" role="status">Loading PDF…</p>
+  <main id="pdf-pages" aria-label="PDF pages" tabindex="0"></main>
+  <script type="module" src="./pdf-reader.mjs"></script>
+</body>
+</html>

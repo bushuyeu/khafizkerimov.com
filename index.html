@@ -57,7 +57,11 @@
     .profile-photo {
       display: block; width: clamp(180px, calc(100dvh - 470px), 300px); max-width: 100%; height: auto; aspect-ratio: 1;
       margin: 0 auto; border-radius: 50%; object-fit: cover;
+      transform: rotate(0deg);
+      transition: transform 3s cubic-bezier(.4,0,.2,1);
     }
+    .workspace.is-docking .profile-photo { transform: rotate(-360deg); }
+    .workspace.is-ready .profile-photo { transition: none; }
     .profile-name {
       margin: 20px 0 18px; font-size: clamp(42px, 7.5dvh, 62px); font-weight: 400; line-height: 1.15;
     }
@@ -79,13 +83,13 @@
     }
     .workspace.is-ready .content-panel { opacity: 1; visibility: visible; pointer-events: auto; transform: none; }
     .content-heading { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 18px 14px; border-bottom: 1px solid #eee; }
-    .content-heading h2 { margin: 0; font-size: 18px; font-weight: 400; }
+    .content-heading h2 { min-width: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 18px; font-weight: 400; }
     .content-heading h2.cv-heading { font-family: 'Times New Roman', Times, serif; font-size: 14pt; font-weight: 400; line-height: 1.2; }
+    .content-back { flex: 0 0 auto; border: 0; padding: 4px 0; background: none; color: inherit; font: inherit; font-size: 13px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+    .content-back:focus-visible { outline: 2px solid #555; outline-offset: 5px; }
     .content-views { flex: 1 1 auto; min-height: 0; }
     .content-frame { width: 100%; height: 100%; display: block; border: 0; background: white; }
     .content-frame[hidden] { display: none; }
-    .profile-photo.is-spinning { animation: portrait-turn 3s ease-in-out; }
-    @keyframes portrait-turn { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     @media (max-height: 700px) and (min-width: 1101px) {
       .profile-photo { width: clamp(140px, calc(100dvh - 460px), 240px); }
       .profile-name { margin: 16px 0 14px; font-size: 42px; }
@@ -100,6 +104,7 @@
         width: min(560px, calc(100% - 32px)); margin: 24px auto;
       }
       .profile-photo { width: min(260px, 60vw); }
+      .profile-photo, .workspace.is-docking .profile-photo { transform: none; transition: none; }
       .profile-name { font-size: clamp(34px, 6vw, 54px); }
       .content-panel { display: none; }
       .workspace.is-ready .content-panel {
@@ -110,7 +115,7 @@
     }
     @media (prefers-reduced-motion: reduce) {
       .profile, .profile-photo, .profile-name, .content-panel { transition: none; }
-      .profile-photo.is-spinning { animation: none; }
+      .workspace.is-docking .profile-photo { transform: none; }
     }
   </style>
 
@@ -140,6 +145,7 @@
 
     <section id="content-panel" class="content-panel" aria-labelledby="content-title" aria-hidden="true" inert>
       <header class="content-heading">
+        <button id="back-to-publications" class="content-back" type="button" hidden>← Publications</button>
         <h2 id="content-title" class="cv-heading" aria-live="polite">Curriculum vitae</h2>
       </header>
       <div class="content-views">
@@ -147,6 +153,7 @@
         <iframe id="view-read" class="content-frame" title="Publications" data-src="./read.html" hidden></iframe>
         <iframe id="view-listen" class="content-frame" title="Podcast episodes" data-src="./listen.html" hidden></iframe>
         <iframe id="view-watch" class="content-frame" title="Videos" data-src="./watch.html" hidden></iframe>
+        <iframe id="view-pdf" class="content-frame" title="Article PDF reader" hidden></iframe>
       </div>
     </section>
   </div>
@@ -155,7 +162,9 @@
       const workspace = document.getElementById('workspace');
       const panel = document.getElementById('content-panel');
       const title = document.getElementById('content-title');
-      const portrait = document.getElementById('portrait');
+      const backToPublications = document.getElementById('back-to-publications');
+      const publicationsFrame = document.getElementById('view-read');
+      const pdfFrame = document.getElementById('view-pdf');
       const navigation = document.querySelector('.profile-nav');
       const links = Array.from(navigation.querySelectorAll('[data-view]'));
       const frames = Array.from(document.querySelectorAll('.content-frame'));
@@ -163,21 +172,9 @@
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
       let phase = 'waiting';
       let pauseTimer;
-      let spinning = false;
-
-      function spinPortrait() {
-        if (spinning || reducedMotion.matches) return;
-        spinning = true;
-        portrait.classList.add('is-spinning');
-      }
-
-      function finishSpin(event) {
-        if (event.animationName !== 'portrait-turn') return;
-        spinning = false;
-        portrait.classList.remove('is-spinning');
-      }
-      portrait.addEventListener('animationend', finishSpin);
-      portrait.addEventListener('animationcancel', finishSpin);
+      let activePdfUrl = '';
+      let lastPdfLink;
+      let publicationsScrollTop = 0;
 
       function dockProfile() {
         if (phase !== 'waiting') return;
@@ -194,6 +191,8 @@
       }
 
       function selectView(view) {
+        const wasReadingPdf = !pdfFrame.hidden;
+        backToPublications.hidden = true;
         title.classList.toggle('cv-heading', view === 'cv');
         for (const frame of frames) {
           const selected = frame.id === `view-${view}`;
@@ -211,20 +210,56 @@
           }
         }
         title.textContent = names[view];
+        title.removeAttribute('title');
+        if (view === 'read' && wasReadingPdf) publicationsFrame.contentWindow.scrollTo(0, publicationsScrollTop);
       }
+
+      function openPdf(url, link) {
+        lastPdfLink = link;
+        publicationsScrollTop = publicationsFrame.contentWindow.scrollY;
+        if (activePdfUrl !== url.href) {
+          const readerUrl = new URL('./pdf-reader.html', window.location.href);
+          readerUrl.searchParams.set('file', url.href);
+          pdfFrame.src = readerUrl.href;
+          activePdfUrl = url.href;
+        }
+        for (const frame of frames) frame.hidden = frame !== pdfFrame;
+        const label = link.textContent.trim() || 'Article PDF';
+        pdfFrame.title = label;
+        title.classList.remove('cv-heading');
+        title.textContent = label;
+        title.title = label;
+        backToPublications.hidden = false;
+        backToPublications.focus({ preventScroll: true });
+      }
+
+      publicationsFrame.addEventListener('load', () => {
+        const publicationDocument = publicationsFrame.contentDocument;
+        if (!publicationDocument) return;
+        publicationDocument.addEventListener('click', event => {
+          const link = event.target.closest('a[href]');
+          if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+          const url = new URL(link.href);
+          if (url.origin !== window.location.origin || !url.pathname.toLowerCase().endsWith('.pdf')) return;
+          event.preventDefault();
+          openPdf(url, link);
+        });
+      });
+
+      backToPublications.addEventListener('click', () => {
+        selectView('read');
+        if (lastPdfLink && lastPdfLink.isConnected) lastPdfLink.focus({ preventScroll: true });
+      });
 
       navigation.addEventListener('click', event => {
         const link = event.target.closest('[data-view]');
         if (!link || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
         event.preventDefault();
         selectView(link.dataset.view);
-        spinPortrait();
         if (phase === 'ready') {
           if (window.matchMedia('(max-width: 1100px), (max-height: 590px)').matches) {
             panel.scrollIntoView({ behavior: reducedMotion.matches ? 'instant' : 'smooth', block: 'start' });
           }
-        } else if (phase === 'waiting') {
-          dockProfile();
         }
       });
 
