@@ -200,6 +200,7 @@
       }
 
       function selectView(view) {
+        if (view !== 'listen') document.getElementById('view-listen').contentDocument?.querySelector('audio')?.pause();
         const wasReadingPdf = !pdfFrame.hidden;
         const wasWatchingVideo = !videoView.hidden;
         if (wasWatchingVideo) videoPlayer.removeAttribute('src');
