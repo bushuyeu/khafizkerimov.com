@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
+*, *::before, *::after { box-sizing: border-box; }
+html { color-scheme: light; scrollbar-width: thin; }
+body.content-document, body.cv-document { margin: 0; padding: 28px clamp(20px, 4vw, 44px) 48px; background: #fff; color: #111; }
+a { color: inherit; text-underline-offset: 3px; overflow-wrap: anywhere; }
+a:focus-visible { outline: 2px solid #555; outline-offset: 4px; }
+.content-document .t-container, .content-document .t-container_100 { width: 100%; max-width: 860px; margin: 0 auto; }
+.content-document .t-col { display: block; float: none; width: 100%; max-width: none; margin: 0; padding: 0; }
+.content-document .t021__line { display: none; }
+.content-document .t021__text-impact { margin: 4px 0 28px; text-align: left; font-size: 30px; line-height: 1.25; }
+.content-document .t-text { font-size: 17px; line-height: 1.7; }
+.content-document .t-text .t-text { font-size: inherit; line-height: inherit; }
+.content-document .t046__text { padding-top: 28px; text-align: left; }
+body.cv-document {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 11pt;
+  line-height: 13.5pt;
+  padding: 32px 24px 48px;
+}
+.cv { max-width: 624px; margin: 0 auto; }
+.cv-header { margin: 0 0 28px; text-align: center; }
+.cv-header h1 { margin: 0 0 2px; font-size: 19pt; font-weight: 400; line-height: 1.15; }
+.cv-header p { margin: 0; font-size: 10.5pt; line-height: 13.5pt; }
+.cv-header a[href^='mailto:'] { text-decoration: none; }
+.cv-header a[href^='http'] { color: #06c; }
+.cv > section + section { margin-top: 22px; }
+.cv h2 { margin: 0 0 2px; font-size: 14pt; font-weight: 400; line-height: 1.2; }
+.cv h3 { margin: 18px 0 0; font-size: 11pt; font-weight: 400; line-height: 15pt; text-decoration: underline; text-underline-offset: 2px; }
+.cv h2 + h3 { margin-top: 0; }
+.cv p { margin: 0; }
+.cv > section:first-of-type p, .cv-education p { line-height: 15pt; }
+.cv-list { margin: 0; padding: 0; list-style: none; }
+.cv-list > li { margin: 0; }
+.cv-list.manuscripts > li { margin-bottom: 22px; }
+.cv-list.manuscripts > li > p:first-child { line-height: 15pt; }
+.cv-list.manuscripts > li > p + p { text-align: justify; }
+.cv-languages { margin: 0; padding: 0; list-style: none; line-height: 15pt; }
+@media (max-width: 520px) {
+  body.content-document { padding: 22px 18px 36px; }
+  body.cv-document { padding: 24px 18px 36px; font-size: 15px; line-height: 1.25; }
+  .content-document .t021__text-impact { font-size: 26px; }
+  .content-document .t-text { font-size: 16px; }
+}
