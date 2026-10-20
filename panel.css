@@ -14,9 +14,11 @@ a:focus-visible { outline: 2px solid #555; outline-offset: 4px; }
 .content-document .t046__text { padding-top: 20px; text-align: left; }
 .publication-content { max-width: 860px; margin: 0 auto; }
 .publication-section + .publication-section { margin-top: 20px; }
-.publication-list { margin: 0; padding: 15px 0; list-style: none; }
-.publication-list > li { margin: 0; padding: 0; }
-.publication-list > li + li { margin-top: var(--entry-gap); }
+.publication-list, .media-list { margin: 0; padding: 0 0 0 1.25em; list-style: none; }
+.publication-list { padding-top: 15px; padding-bottom: 15px; }
+.publication-list > li, .media-list > li { position: relative; margin: 0; padding: 0; }
+.publication-list > li::before, .media-list > li::before { content: ''; position: absolute; left: -.9em; top: .775em; width: .3em; height: .3em; border-radius: 50%; background: currentColor; transform: translateY(-50%); }
+.publication-list > li + li, .media-list > li + li { margin-top: var(--entry-gap); }
 body.cv-document {
   font-family: 'Times New Roman', Times, serif;
   font-size: 11pt;
