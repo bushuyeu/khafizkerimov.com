@@ -21,7 +21,7 @@ a:focus-visible { outline: 2px solid #555; outline-offset: 4px; }
 .publication-list > li + li, .media-list > li + li { margin-top: var(--entry-gap); }
 .podcast-player { margin-top: 12px; }
 .podcast-controls { --podcast-thumb-size: 10.72px; --podcast-icon-size: calc(var(--podcast-thumb-size) * 1.25); display: flex; align-items: center; gap: 6px; font: 13px/1.5 'Roboto', Arial, sans-serif; }
-.podcast-toggle { flex: 0 0 24px; display: grid; place-items: center; height: 28px; border: 0; padding: 0; background: transparent; color: #111; cursor: pointer; }
+.podcast-toggle { flex: 0 0 24px; display: grid; align-items: center; justify-items: start; height: 28px; border: 0; padding: 0; background: transparent; color: #111; cursor: pointer; }
 .podcast-icon { display: block; width: var(--podcast-icon-size); height: var(--podcast-icon-size); fill: currentColor; }
 .podcast-icon--pause, .podcast-toggle.is-playing .podcast-icon--play { display: none; }
 .podcast-toggle.is-playing .podcast-icon--pause { display: block; }
