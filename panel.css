@@ -60,8 +60,8 @@ body.cv-document {
 .cv h2 + h3 { margin-top: 0; }
 .cv p { margin: 0; }
 .cv > section:first-of-type p, .cv-education p { line-height: 15pt; }
-.cv-publication-area { margin-top: 12px; }
-.cv-publication-area > .cv-list { margin-top: 2px; }
+.cv-publication-area { margin-top: 6px; }
+.cv-publication-area > .cv-list { margin-top: 1px; }
 .cv-list { margin: 0; padding: 0; list-style: none; }
 .cv-list > li { margin: 0; }
 .cv-list.manuscripts > li { margin-bottom: 22px; }
