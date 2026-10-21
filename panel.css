@@ -100,7 +100,7 @@ body.read-document .t021__text-impact { margin: 2px 0 10px; }
 html { color-scheme: light; scrollbar-width: thin; }
 body.content-document, body.cv-document { margin: 0; padding: 22px 18px 36px; background: #fff; color: #111; }
 body.content-document { --entry-font-size: 16px; --entry-line-height: 1.55; --entry-gap: 1.55em; }
-body.read-document { --entry-gap: .775em; }
+body.read-document { --entry-gap: .3875em; }
 a { color: inherit; text-underline-offset: 3px; overflow-wrap: anywhere; }
 a:focus-visible { outline: 2px solid #555; outline-offset: 4px; }
 .content-document .t-container, .content-document .t-container_100 { width: 100%; max-width: 860px; margin: 0 auto; }
@@ -114,6 +114,7 @@ a:focus-visible { outline: 2px solid #555; outline-offset: 4px; }
 .publication-section + .publication-section { margin-top: 10px; }
 .publication-area + .publication-area { margin-top: 12px; }
 .publication-area-title { margin: 0; font-family: 'Times New Roman', Times, serif; font-size: 11pt; font-weight: 700; line-height: 15pt; }
+body.read-document .publication-area-title { font-family: 'Roboto', Arial, sans-serif; font-size: var(--entry-font-size); font-weight: 700; line-height: var(--entry-line-height); }
 .publication-area > .publication-list { padding-top: 4px; padding-bottom: 0; }
 .publication-list, .media-list { margin: 0; padding: 0 0 0 1.25em; list-style: none; }
 .publication-list { padding-top: 7.5px; padding-bottom: 7.5px; }
