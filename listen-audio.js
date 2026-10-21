@@ -5,7 +5,10 @@
   const player = document.createElement('div');
   player.className = 'podcast-player';
   player.innerHTML = `<div class="podcast-controls">
-    <button class="podcast-toggle" type="button" aria-label="Play episode">Play</button>
+    <button class="podcast-toggle" type="button" aria-label="Play episode">
+      <svg class="podcast-icon podcast-icon--play" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M0 0L16 8 0 16Z"/></svg>
+      <svg class="podcast-icon podcast-icon--pause" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M0 0H5V16H0ZM11 0H16V16H11Z"/></svg>
+    </button>
     <input class="podcast-seek" type="range" min="0" max="1" step="1" value="0" aria-label="Seek in episode" disabled>
     <span class="podcast-time">0:00 / 0:00</span>
   </div><p class="podcast-error" role="status" hidden></p>`;
@@ -33,7 +36,7 @@
     seek.disabled = audio.readyState < 1 || duration <= 0;
     seek.setAttribute('aria-valuetext', `${formatTime(position)} of ${formatTime(duration)}`);
     time.textContent = `${formatTime(position)} / ${formatTime(duration)}`;
-    toggle.textContent = audio.paused ? 'Play' : 'Pause';
+    toggle.classList.toggle('is-playing', !audio.paused);
     toggle.setAttribute('aria-label', `${audio.paused ? 'Play' : 'Pause'} episode`);
   }
 
