@@ -14,6 +14,9 @@ a:focus-visible { outline: 2px solid #555; outline-offset: 4px; }
 .content-document .t046__text { padding-top: 20px; text-align: left; }
 .publication-content { max-width: 860px; margin: 0 auto; }
 .publication-section + .publication-section { margin-top: 20px; }
+.publication-area + .publication-area { margin-top: 24px; }
+.publication-area-title { margin: 0; font-family: 'Times New Roman', Times, serif; font-size: 11pt; font-weight: 700; line-height: 15pt; }
+.publication-area > .publication-list { padding-top: 8px; padding-bottom: 0; }
 .publication-list, .media-list { margin: 0; padding: 0 0 0 1.25em; list-style: none; }
 .publication-list { padding-top: 15px; padding-bottom: 15px; }
 .publication-list > li, .media-list > li { position: relative; margin: 0; padding: 0; }
@@ -57,6 +60,8 @@ body.cv-document {
 .cv h2 + h3 { margin-top: 0; }
 .cv p { margin: 0; }
 .cv > section:first-of-type p, .cv-education p { line-height: 15pt; }
+.cv-publication-area { margin-top: 12px; }
+.cv-publication-area > .cv-list { margin-top: 2px; }
 .cv-list { margin: 0; padding: 0; list-style: none; }
 .cv-list > li { margin: 0; }
 .cv-list.manuscripts > li { margin-bottom: 22px; }
