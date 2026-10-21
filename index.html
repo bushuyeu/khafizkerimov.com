@@ -47,6 +47,22 @@
     body.has-panel { overflow: hidden; }
     a { color: inherit; text-underline-offset: 3px; }
     a:focus-visible { outline: 2px solid #555; outline-offset: 5px; }
+    .workspace {
+      --dock-left: var(--gutter);
+      --panel-left: calc(var(--gutter) + var(--sidebar) + var(--gap));
+      --panel-right: var(--gutter);
+      --panel-border-left: 1px solid #e5e5e5;
+      --panel-border-right: 0;
+      --panel-offset: 18px;
+    }
+    .workspace.dock-right {
+      --dock-left: calc(100% - var(--gutter) - var(--sidebar));
+      --panel-left: var(--gutter);
+      --panel-right: calc(var(--gutter) + var(--sidebar) + var(--gap));
+      --panel-border-left: 0;
+      --panel-border-right: 1px solid #e5e5e5;
+      --panel-offset: -18px;
+    }
     .profile {
       position: fixed; top: var(--gutter); left: 50%; transform: translateX(-50%);
       width: var(--sidebar);
@@ -68,13 +84,14 @@
     .profile-nav a[aria-current='page'] { text-decoration-thickness: 2px; }
     .profile-contact { flex: 0 0 auto; font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; padding-bottom: 4px; }
     .workspace.is-docking .profile {
-      left: var(--gutter); transform: translateX(0);
+      left: var(--dock-left); transform: translateX(0);
     }
     .content-panel {
-      position: fixed; top: var(--gutter); right: var(--gutter); bottom: var(--gutter);
-      left: calc(var(--gutter) + var(--sidebar) + var(--gap));
-      display: flex; flex-direction: column; min-width: 0; border-left: 1px solid #e5e5e5;
-      opacity: 0; visibility: hidden; pointer-events: none; transform: translateX(18px);
+      position: fixed; top: var(--gutter); right: var(--panel-right); bottom: var(--gutter);
+      left: var(--panel-left);
+      display: flex; flex-direction: column; min-width: 0;
+      border-left: var(--panel-border-left); border-right: var(--panel-border-right);
+      opacity: 0; visibility: hidden; pointer-events: none; transform: translateX(var(--panel-offset));
       transition: opacity .45s ease, transform .45s ease, visibility .45s;
     }
     .workspace.is-ready .content-panel { opacity: 1; visibility: visible; pointer-events: auto; transform: none; }
@@ -107,7 +124,7 @@
       .content-panel { display: none; }
       .workspace.is-ready .content-panel {
         position: relative; inset: auto; display: flex; width: calc(100% - 32px);
-        height: 80dvh; min-height: 480px; margin: 32px 16px 16px; border-left: 0; border-top: 1px solid #ddd;
+        height: 80dvh; min-height: 480px; margin: 32px 16px 16px; border-left: 0; border-right: 0; border-top: 1px solid #ddd;
       }
       .content-heading { padding: 20px 8px 16px; }
     }
@@ -162,6 +179,7 @@
   <script>
     (() => {
       const workspace = document.getElementById('workspace');
+      workspace.classList.toggle('dock-right', new Date().getDate() % 2 === 1);
       const panel = document.getElementById('content-panel');
       const title = document.getElementById('content-title');
       const backToPublications = document.getElementById('back-to-publications');
