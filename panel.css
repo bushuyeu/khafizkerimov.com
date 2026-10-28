@@ -124,6 +124,11 @@ body.read-document .publication-list > li::before { content: none; }
 .publication-list > li::before, .media-list > li::before { content: ''; position: absolute; left: -.9em; top: .775em; width: .3em; height: .3em; border-radius: 50%; background: currentColor; transform: translateY(-50%); }
 .publication-list > li + li, .media-list > li + li { margin-top: var(--entry-gap); }
 .podcast-player { margin-top: 12px; }
+.podcast-description { margin: 0 0 12px; font: inherit; }
+.podcast-description p { margin: 0; }
+.podcast-description p + p { margin-top: 8px; }
+.podcast-description ul, .podcast-description ol { margin: 8px 0; padding-left: 1.25em; }
+
 .podcast-controls { --podcast-thumb-size: 10.72px; --podcast-icon-size: calc(var(--podcast-thumb-size) * 1.25); display: flex; align-items: center; gap: 6px; font: 13px/1.5 'Roboto', Arial, sans-serif; }
 .podcast-toggle { flex: 0 0 24px; display: grid; align-items: center; justify-items: start; height: 28px; border: 0; padding: 0; background: transparent; color: #111; cursor: pointer; }
 .podcast-icon { display: block; width: var(--podcast-icon-size); height: var(--podcast-icon-size); fill: currentColor; }

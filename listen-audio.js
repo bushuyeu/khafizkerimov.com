@@ -4,7 +4,8 @@
   audio.preload = 'metadata';
   const player = document.createElement('div');
   player.className = 'podcast-player';
-  player.innerHTML = `<div class="podcast-controls">
+  player.id = 'podcast-player';
+  player.innerHTML = `<div class="podcast-description"></div><div class="podcast-controls">
     <button class="podcast-toggle" type="button" aria-label="Play episode">
       <svg class="podcast-icon podcast-icon--play" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M0 0L16 8 0 16Z"/></svg>
       <svg class="podcast-icon podcast-icon--pause" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M0 0H5V16H0ZM11 0H16V16H11Z"/></svg>
@@ -17,6 +18,11 @@
   const seek = player.querySelector('input');
   const time = player.querySelector('.podcast-time');
   const error = player.querySelector('.podcast-error');
+  const description = player.querySelector('.podcast-description');
+  for (const link of document.querySelectorAll('a[data-audio-src]')) {
+    link.setAttribute('aria-expanded', 'false');
+    link.setAttribute('aria-controls', player.id);
+  }
   let currentLink;
   let fallbackDuration = 0;
 
@@ -54,10 +60,14 @@
     link.setAttribute('aria-expanded', 'true');
     if (currentLink !== link) {
       audio.pause();
-      currentLink?.removeAttribute('aria-expanded');
+      currentLink?.setAttribute('aria-expanded', 'false');
       currentLink = link;
       link.setAttribute('aria-expanded', 'true');
-      link.closest('li').append(player);
+      const episode = link.closest('li');
+      const template = episode.querySelector('.podcast-description-template');
+      description.replaceChildren(...(template ? [template.content.cloneNode(true)] : []));
+      description.hidden = !description.textContent.trim();
+      episode.append(player);
       fallbackDuration = link.dataset.duration.split(':').reduce((sum, part) => sum * 60 + Number(part), 0);
       error.hidden = true;
       audio.src = link.dataset.audioSrc;

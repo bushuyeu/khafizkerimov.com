@@ -98,6 +98,7 @@
     .content-heading { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 18px 14px; border-bottom: 1px solid #eee; }
     .content-heading h2 { min-width: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 18px; font-weight: 400; }
     .content-heading h2.cv-heading { font-family: 'Times New Roman', Times, serif; font-size: 14pt; font-weight: 400; line-height: 1.2; }
+    .cv-pdf-link { margin-left: auto; flex: 0 0 auto; font-size: 13px; white-space: nowrap; }
     .content-back { flex: 0 0 auto; border: 0; padding: 4px 0; background: none; color: inherit; font: inherit; font-size: 13px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
     .content-back:focus-visible { outline: 2px solid #555; outline-offset: 5px; }
     .content-views { flex: 1 1 auto; min-height: 0; }
@@ -163,11 +164,12 @@
         <button id="back-to-publications" class="content-back" type="button" hidden>← Publications</button>
         <button id="back-to-watch" class="content-back" type="button" hidden>← Watch</button>
         <h2 id="content-title" class="cv-heading" aria-live="polite">Curriculum vitae</h2>
+        <a id="cv-pdf-link" class="cv-pdf-link" href="./khafiz-kerimov-cv.pdf?v=20261022-practical-sublime" download="Khafiz-Kerimov-CV.pdf">Download PDF</a>
       </header>
       <div class="content-views">
-        <iframe id="view-cv" class="content-frame" title="Curriculum vitae" src="./cv.html?v=20261021-cv-headings"></iframe>
+        <iframe id="view-cv" class="content-frame" title="Curriculum vitae" src="./cv.html?v=20261022-practical-sublime"></iframe>
         <iframe id="view-read" class="content-frame" title="Publications" data-src="./read.html?v=20261021-read-headings" hidden></iframe>
-        <iframe id="view-listen" class="content-frame" title="Podcast episodes" data-src="./listen.html" hidden></iframe>
+        <iframe id="view-listen" class="content-frame" title="Podcast episodes" data-src="./listen.html?v=20261028-descriptions" hidden></iframe>
         <iframe id="view-watch" class="content-frame" title="Videos" data-src="./watch.html" hidden></iframe>
         <iframe id="view-pdf" class="content-frame" title="Article PDF reader" hidden></iframe>
         <div id="view-video" class="content-frame video-view" hidden>
@@ -183,6 +185,7 @@
       workspace.classList.toggle('dock-right', new Date().getDate() % 2 === 1);
       const panel = document.getElementById('content-panel');
       const title = document.getElementById('content-title');
+      const cvPdfLink = document.getElementById('cv-pdf-link');
       const backToPublications = document.getElementById('back-to-publications');
       const publicationsFrame = document.getElementById('view-read');
       const pdfFrame = document.getElementById('view-pdf');
@@ -226,6 +229,7 @@
         backToPublications.hidden = true;
         backToWatch.hidden = true;
         title.classList.toggle('cv-heading', view === 'cv');
+        cvPdfLink.hidden = view !== 'cv';
         for (const frame of frames) {
           const selected = frame.id === `view-${view}`;
           if (selected && frame.dataset.src) {
